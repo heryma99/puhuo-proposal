@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>鋪貨業務合作方案 v1.9</title>
+<style>
+  :root {
+    --primary: #1a365d;
+    --primary-light: #2b6cb0;
+    --accent: #c53030;
+    --bg: #f7fafc;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --text: #1a202c;
+    --text-secondary: #4a5568;
+    --text-muted: #718096;
+    --highlight-bg: #ebf8ff;
+    --warning-bg: #fffbeb;
+    --danger-bg: #fff5f5;
+    --success-bg: #f0fff4;
+    --tag-blue: #3182ce;
+    --tag-green: #38a169;
+    --tag-orange: #dd6b20;
+    --tag-red: #e53e3e;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", "PingFang TC", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+
+  /* Header */
+  .doc-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: #fff;
+    padding: 40px 36px;
+    border-radius: 12px;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+  }
+  .doc-header::before {
+    content: '';
+    position: absolute;
+    top: -40%; right: -10%;
+    width: 300px; height: 300px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+  }
+  .doc-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .doc-header .version {
+    font-size: 14px;
+    opacity: 0.85;
+  }
+  .doc-header .overview-text {
+    margin-top: 16px;
+    font-size: 15px;
+    line-height: 1.8;
+    opacity: 0.95;
+  }
+
+  /* Section */
+  .section {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+  }
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title .num {
+    background: var(--primary);
+    color: #fff;
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  /* Subsection */
+  .sub-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--primary-light);
+    margin: 20px 0 12px;
+    padding-left: 12px;
+    border-left: 3px solid var(--primary-light);
+  }
+  .sub-sub-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 14px 0 8px;
+  }
+
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 14px;
+  }
+  thead th {
+    background: var(--primary);
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+  }
+  thead th:first-child { border-radius: 6px 0 0 0; }
+  thead th:last-child { border-radius: 0 6px 0 0; }
+  tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tbody tr:hover { background: var(--highlight-bg); }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:last-child td:first-child { border-radius: 0 0 0 6px; }
+  tbody tr:last-child td:last-child { border-radius: 0 0 6px 0; }
+
+  /* Highlight rows */
+  tbody tr.row-highlight td {
+    background: #fffbeb;
+    font-weight: 600;
+  }
+
+  /* Tags */
+  .tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .tag-blue { background: var(--tag-blue); }
+  .tag-green { background: var(--tag-green); }
+  .tag-orange { background: var(--tag-orange); }
+  .tag-red { background: var(--tag-red); }
+
+  /* Flow diagram */
+  .flow-box {
+    background: #f8faff;
+    border: 1px solid #d4e3f5;
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin: 14px 0;
+    font-family: "Cascadia Code", "Consolas", monospace;
+    font-size: 13.5px;
+    line-height: 2;
+    color: var(--text-secondary);
+    overflow-x: auto;
+  }
+  .flow-box .arrow {
+    color: var(--primary-light);
+    font-weight: 700;
+  }
+  .flow-box .highlight-text {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* Blockquote / Principle */
+  .principle {
+    background: var(--highlight-bg);
+    border-left: 4px solid var(--primary-light);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 14px 0;
+    font-size: 14.5px;
+    color: var(--primary);
+    font-weight: 500;
+  }
+
+  /* Warning / Note */
+  .note {
+    background: var(--warning-bg);
+    border-left: 4px solid #d69e2e;
+    border-radius: 0 8px 8px 0;
+    padding: 12px 18px;
+    margin: 14px 0;
+    font-size: 13.5px;
+    color: #744210;
+  }
+
+  /* Lists */
+  ol, ul {
+    padding-left: 22px;
+    margin: 10px 0;
+  }
+  li {
+    margin-bottom: 6px;
+    font-size: 14.5px;
+  }
+
+  /* Contract list */
+  .contract-list {
+    counter-reset: clause;
+    list-style: none;
+    padding-left: 0;
+  }
+  .contract-list li {
+    counter-increment: clause;
+    margin-bottom: 16px;
+    padding: 14px 18px;
+    background: var(--bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    position: relative;
+    padding-left: 50px;
+  }
+  .contract-list li::before {
+    content: counter(clause);
+    position: absolute;
+    left: 14px;
+    top: 14px;
+    background: var(--primary);
+    color: #fff;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .contract-list li strong {
+    color: var(--primary);
+  }
+
+  /* Inline bold */
+  strong { color: var(--text); }
+
+  /* Status tag */
+  .status-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    margin: 2px 0;
+  }
+  .status-green { background: #c6f6d5; color: #22543d; }
+  .status-blue { background: #bee3f8; color: #2a4365; }
+  .status-yellow { background: #fefcbf; color: #744210; }
+  .status-red { background: #fed7d7; color: #742a2a; }
+  .status-gray { background: #e2e8f0; color: #4a5568; }
+
+  /* Print */
+  @media print {
+    body { background: #fff; }
+    .section { box-shadow: none; break-inside: avoid; }
+    .doc-header { box-shadow: none; }
+  }
+
+  /* Footer */
+  .doc-footer {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-top: 24px;
+    padding: 16px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="doc-header">
+    <h1>鋪貨業務合作方案</h1>
+    <div class="version">版本：v1.9　日期：2026-05-20</div>
+    <div class="overview-text">
+      本方案規範公司與供應商之間「鋪貨」合作模式下的全流程管理，涵蓋 PO 單管理、入庫收貨、兩種結算觸發機制、貨權轉移判定，以及退貨與異常情形的處理規則，並明確各角色職責與系統配置要求。
+    </div>
+  </div>
+
+  <!-- Section 2: 核心概念定義 -->
+  <div class="section">
+    <div class="section-title"><span class="num">二</span>核心概念定義</div>
+    <table>
+      <thead>
+        <tr><th>概念</th><th>定義</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>鋪貨</strong></td><td>供應商將商品預先存入 PuHuo 倉，貨款暫不結算，待滿足約定條件後再付款</td></tr>
+        <tr><td><strong>PuHuo 倉</strong></td><td>鋪貨商品的唯一指定入庫倉，供應商只能向此倉下 PO 單</td></tr>
+        <tr><td><strong>結算觸發</strong></td><td>滿足特定條件後才發生貨款支付，有「以銷定結」和「調拔結算」兩種方式</td></tr>
+        <tr><td><strong>貨權轉移</strong></td><td>商品所有權從供應商轉移至買方（或公司）的時間節點</td></tr>
+        <tr><td><strong>有效銷售</strong></td><td>客戶購買且在退貨期結束後未發生退貨，方視為銷售成立</td></tr>
+        <tr><td><strong>呆滯庫存</strong></td><td>在 PuHuo 倉存放超過約定期限仍未觸發結算的鋪貨商品</td></tr>
+        <tr><td><strong>退回供應商</strong></td><td>因呆滯或質量問題，將商品從 PuHuo 倉發回供應商處，終止鋪貨合作</td></tr>
+        <tr><td><strong>倉儲費</strong></td><td>鋪貨商品在 PuHuo 倉存放期間產生的倉儲費用，標準 <strong>$0.1 / 個 / 月</strong>，不足月按日折算（$0.1 ÷ 30 = <strong>$0.00333 / 個 / 天</strong>）</td></tr>
+        <tr><td><strong>加工費</strong></td><td>對鋪貨商品進行加工處理的費用，按「<strong>$0.4 / 個</strong>」計收</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Section 3: PO單管理規則 -->
+  <div class="section">
+    <div class="section-title"><span class="num">三</span>PO 單管理規則</div>
+
+    <div class="sub-title">3.1 下單主體與權限</div>
+    <ul>
+      <li>由<strong>供應商</strong>在 ERP 系統中自行下 PO 單</li>
+      <li>供應商只能查看<strong>自己名下</strong>的 PO 單，無法查看其他供應商訂單</li>
+      <li>目標倉庫<strong>強制鎖定為 PuHuo 倉</strong>，不可選其他倉</li>
+    </ul>
+
+    <div class="sub-title">3.2 標籤必填規則</div>
+    <p style="margin-bottom:10px;">下 PO 單時<strong>必須選擇且只能選一個</strong>結算標籤，對應不同結算方式：</p>
+    <table>
+      <thead>
+        <tr><th>標籤</th><th>結算方式</th><th>結算觸發條件</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-blue">鋪貨</span></td>
+          <td>以銷定結</td>
+          <td>商品完成有效銷售（退貨期結束且無退貨）</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-green">鋪貨+調拔結算</span></td>
+          <td>調拔結算</td>
+          <td>商品從 PuHuo 倉調拔至其他任意倉庫</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note">標籤缺失或錯誤的 PO 單，系統攔截，不得進入審核流程。</div>
+
+    <div class="sub-title">3.3 分級審核規則</div>
+    <p style="margin-bottom:10px;">所有鋪貨 PO 單均由<strong>採購人員</strong>審核，依風險等級執行分級審核：</p>
+    <table>
+      <thead>
+        <tr><th>風險等級</th><th>適用情形</th><th>審核方式</th><th>審核重點</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="status-tag status-green">正常</span></td>
+          <td>常規鋪貨 PO</td>
+          <td>採購人員標準審核</td>
+          <td>PO 合規性（標籤、商品品類、數量）、庫存深度合理性、供應商鋪貨規模控制</td>
+        </tr>
+        <tr>
+          <td><span class="status-tag status-red">高風險</span></td>
+          <td>①近 30 天無動銷的 SKU<br>②可售天數 > 360 天的商品</td>
+          <td>採購人員加強審核＋主管覆核</td>
+          <td>除上述外，增加呆滯風險預判、供應商履約能力評估、是否須附帶退貨承諾</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="sub-sub-title">高風險情形說明</div>
+    <ul>
+      <li><strong>近 30 天無動銷：</strong>該 SKU 近 30 天內未產生有效銷售，說明動銷率極低，鋪貨須嚴格控管數量</li>
+      <li><strong>可售天數 > 360 天：</strong>按當前日均銷售速度，庫存可售天數超過 360 天，須評估是否適合鋪貨模式</li>
+    </ul>
+
+    <div class="principle">分級審核與呆滯退回閉環：§3.3 分級審核認定的高風險條件（近 30 天無動銷 / 可售天數 > 360 天），同時是 §6.3 呆滯退回供應商的觸發條件。高風險 PO 經審核通過後，系統對該批次標記「高風險監控」，入庫後若持續滿足上述任一條件，即啟動退回供應商流程。</div>
+
+    <div class="sub-sub-title">審核結果處理</div>
+    <ol>
+      <li>審核通過 → PO 單生效，供應商可預約送貨入庫</li>
+      <li>審核不通過 → 退回供應商修改，修改後重新提交</li>
+      <li>高風險 PO 審核通過 → 同步標記「高風險監控」，進入後續呆滯追蹤名單</li>
+    </ol>
+  </div>
+
+  <!-- Section 4: 兩種結算方式 -->
+  <div class="section">
+    <div class="section-title"><span class="num">四</span>兩種結算方式詳述</div>
+
+    <div class="sub-title">方式① — 鋪貨（以銷定結）</div>
+    <p>適用標籤：<span class="tag tag-blue">鋪貨</span></p>
+
+    <div class="sub-sub-title">結算時序</div>
+    <div class="flow-box">
+      PO單審核通過<br>
+      <span class="arrow">→</span> 供應商預約送貨<br>
+      <span class="arrow">→</span> 入庫 PuHuo 倉（貨權暫歸供應商）<br>
+      <span class="arrow">→</span> 客戶下單，商品佔用出庫<br>
+      <span class="arrow">→</span> <span class="highlight-text">退貨期結束，核查無未關閉退貨申請</span><br>
+      <span class="arrow">→</span> 生成應付帳款<br>
+      <span class="arrow">→</span> 結算付款給供應商<br>
+      <span class="arrow">→</span> <strong>貨權正式轉移至買方</strong>
+    </div>
+
+    <div class="sub-sub-title">付款前強制卡點</div>
+    <p>發起付款前，系統須核查該批次是否存在未關閉的退貨申請，有則暫緩結算。</p>
+
+    <div class="sub-sub-title">退貨期建議</div>
+    <p>在合同中明確退貨期限（如客戶簽收後 N 天），付款時間設在退貨期結束後，以確保付款前退貨風險已出清。</p>
+
+    <hr style="border:none;border-top:1px solid var(--border);margin:28px 0;">
+
+    <div class="sub-title">方式② — 鋪貨+調拔結算（調拔結算）</div>
+    <p>適用標籤：<span class="tag tag-green">鋪貨+調拔結算</span></p>
+
+    <div class="sub-sub-title">結算時序</div>
+    <div class="flow-box">
+      PO單審核通過<br>
+      <span class="arrow">→</span> 供應商預約送貨<br>
+      <span class="arrow">→</span> 入庫 PuHuo 倉（貨權暫歸供應商）<br>
+      <span class="arrow">→</span> <span class="highlight-text">調拔出庫至其他倉庫（視同銷售）</span><br>
+      <span class="arrow">→</span> 即時生成應付帳款<br>
+      <span class="arrow">→</span> 結算付款給供應商<br>
+      <span class="arrow">→</span> <strong>貨權即時轉移</strong>
+    </div>
+
+    <div class="note">調拔一旦完成，無論後續是否實際銷售，均須結算。建議對調拔操作設置審批環節，防止誤操作觸發結算。</div>
+  </div>
+
+  <!-- Section 5: 貨權轉移規則 -->
+  <div class="section">
+    <div class="section-title"><span class="num">五</span>貨權轉移規則</div>
+
+    <div class="sub-title">5.1 方式①（以銷定結）貨權轉移判定</div>
+    <table>
+      <thead>
+        <tr><th>情形</th><th>貨物狀態</th><th>貨權歸屬</th><th>是否結算</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>在庫未銷售</td>
+          <td>PuHuo 倉</td>
+          <td>供應商</td>
+          <td>否</td>
+        </tr>
+        <tr>
+          <td>已出庫，退貨期內</td>
+          <td>客戶處</td>
+          <td>供應商</td>
+          <td>否，等待期內</td>
+        </tr>
+        <tr>
+          <td>退貨期結束，無退貨</td>
+          <td>客戶處</td>
+          <td><strong>轉移至買方</strong></td>
+          <td><span class="status-tag status-green">是</span></td>
+        </tr>
+        <tr>
+          <td>退貨期內，客戶申請退貨並退回</td>
+          <td>退回倉庫</td>
+          <td>供應商</td>
+          <td>否</td>
+        </tr>
+        <tr>
+          <td>質量問題，公司退款給客戶，貨物不退回</td>
+          <td>客戶處（廢棄/銷毀）</td>
+          <td><strong>仍屬供應商</strong></td>
+          <td><span class="status-tag status-red">否</span></td>
+        </tr>
+        <tr class="row-highlight">
+          <td><strong>已付款後，客戶退貨退回</strong></td>
+          <td>退回倉庫</td>
+          <td><strong>回歸供應商</strong></td>
+          <td><span class="status-tag status-red">已付款須追回</span></td>
+        </tr>
+        <tr class="row-highlight">
+          <td><strong>呆滯超期，退回供應商</strong></td>
+          <td>退回供應商處</td>
+          <td><strong>回歸供應商</strong></td>
+          <td><span class="status-tag status-red">否，不結算</span></td>
+        </tr>
+        <tr class="row-highlight">
+          <td><strong>質量問題，退回供應商</strong></td>
+          <td>退回供應商處</td>
+          <td><strong>回歸供應商</strong></td>
+          <td><span class="status-tag status-red">否，不結算</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="sub-title">5.2 方式②（調拔結算）貨權轉移判定</div>
+    <table>
+      <thead>
+        <tr><th>情形</th><th>貨物狀態</th><th>貨權歸屬</th><th>是否結算</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>在庫未調拔</td>
+          <td>PuHuo 倉</td>
+          <td>供應商</td>
+          <td>否</td>
+        </tr>
+        <tr>
+          <td>調拔出庫完成</td>
+          <td>其他倉庫</td>
+          <td><strong>即時轉移</strong></td>
+          <td><span class="status-tag status-green">是，立即結算</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Section 6: 異常與退款處理 -->
+  <div class="section">
+    <div class="section-title"><span class="num">六</span>異常與退款處理規則</div>
+
+    <!-- 6.1 -->
+    <div class="sub-title">6.1 質量問題退款但貨物不退回</div>
+    <p><strong>場景：</strong>客戶收貨後發現質量問題，公司對客戶退款，但貨物無法退回（損耗、就地銷毀等）。</p>
+
+    <div class="principle">退款不退貨 ≠ 銷售成立。未發生有效銷售，貨權不轉移，供應商不得結算貨款。</div>
+
+    <p><strong>處理方式：</strong></p>
+    <ol>
+      <li>該批次貨物的成本損失由<strong>供應商自負</strong></li>
+      <li>公司對客戶的退款，向供應商追索或從後續貨款中扣抵</li>
+      <li>ERP 中標記為「質量問題核銷」，關聯原 PO 單留存記錄</li>
+    </ol>
+
+    <hr style="border:none;border-top:1px dashed var(--border);margin:24px 0;">
+
+    <!-- 6.2 -->
+    <div class="sub-title">6.2 已付款後客戶發生退貨</div>
+    <p><strong>場景：</strong>因退貨期設計不嚴謹、帳期問題或超期例外退貨，導致貨款已付但客戶隨後退貨。</p>
+
+    <div class="principle">退貨一旦發生，貨物所有權視為自始未完成轉移，已付貨款須強制追回。</div>
+
+    <p><strong>追回路徑（按優先順序）：</strong></p>
+    <table>
+      <thead>
+        <tr><th>優先級</th><th>方式</th><th>說明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="tag tag-green">優先①</span></td><td>從供應商下次應付帳款中直接<strong>扣抵</strong></td><td>最快速，無需額外收款動作</td></tr>
+        <tr><td><span class="tag tag-blue">優先②</span></td><td>供應商在約定期限內（如 N 個工作日）<strong>主動退款</strong></td><td>適用於無後續貨款可扣的情況</td></tr>
+        <tr><td><span class="tag tag-red">最後③</span></td><td>超期未退，計入應收帳款，走<strong>合同追索</strong></td><td>作為兜底手段</td></tr>
+      </tbody>
+    </table>
+
+    <p><strong>ERP 操作動作：</strong></p>
+    <ul>
+      <li>生成「退貨衝銷單」，關聯原 PO 單及原結算單</li>
+      <li>原應付帳款狀態反轉為「待扣回」</li>
+      <li>庫存貨權標記重置為「供應商所有」</li>
+      <li>退回貨物重新計入 PuHuo 倉鋪貨庫存</li>
+    </ul>
+
+    <div class="note"><strong>根本防線：</strong>在合同中明確退貨期限，並將付款時間設計在退貨期結束後，從源頭規避「已付款再退貨」的情形。</div>
+
+    <hr style="border:none;border-top:1px dashed var(--border);margin:24px 0;">
+
+    <!-- 6.3 -->
+    <div class="sub-title">6.3 呆滯庫存退回供應商</div>
+    <p><strong>場景：</strong>商品入庫 PuHuo 倉後長期未能銷售，積壓佔用倉位，需退回供應商。</p>
+
+    <p><strong>觸發條件（滿足任一即觸發，建議在合同中約定）：</strong></p>
+    <ul>
+      <li><strong>近 30 天無動銷的 SKU</strong> — 該 SKU 近 30 天內未產生有效銷售</li>
+      <li><strong>可售天數 > 360 天</strong> — 按當前日均銷售速度，庫存可售天數超過 360 天</li>
+    </ul>
+
+    <div class="note">上述條件與 §3.3 分級審核的高風險判定標準一致，形成「審核預判 → 入庫監控 → 呆滯退回」的閉環管理。</div>
+
+    <div class="principle">呆滯期間貨權始終歸供應商，不觸發結算。退回供應商時，貨權自然回歸，無需結算。</div>
+
+    <div class="sub-sub-title">處理流程</div>
+    <div class="flow-box">
+      系統自動監控（近 30 天無動銷 / 可售天數 > 360 天）<br>
+      <span class="arrow">→</span> 滿足任一條件，觸發呆滯預警<br>
+      <span class="arrow">→</span> <span class="highlight-text">通知採購人員及供應商</span><br>
+      <span class="arrow">→</span> 採購人員評估是否啟動退回流程<br>
+      <span class="arrow">→</span> 通知供應商，協商退回時間與物流方式<br>
+      <span class="arrow">→</span> 生成「退回供應商出庫單」，關聯原 PO 單<br>
+      <span class="arrow">→</span> 供應商確認收貨 → 庫存核銷，原 PO 單關閉
+    </div>
+
+    <p><strong>費用分擔建議：</strong></p>
+    <table>
+      <thead>
+        <tr><th>項目</th><th>承擔方</th><th>計費標準</th><th>說明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>呆滯期間倉儲費</td><td><span class="status-tag status-red">供應商</span></td><td><strong>$0.1 / 個 / 月</strong><br><small>不足月按日折算</small></td><td>按每批次實際在庫天數×日費率累計</td></tr>
+        <tr><td>退回物流費</td><td><span class="status-tag status-red">供應商</span></td><td>按實際發生</td><td>退回供應商處的運費由供應商承擔</td></tr>
+        <tr><td>包裝/損耗損失</td><td><span class="status-tag status-red">供應商</span></td><td>按實際發生</td><td>退回過程中的包裝損壞或貨物損耗由供應商承擔</td></tr>
+      </tbody>
+    </table>
+
+    <div class="note">若合同約定由公司承擔部分倉儲費，須另行明確。但建議原則上全額由供應商承擔，以倒逼供應商控制鋪貨品類和數量。</div>
+
+    <div class="sub-sub-title">倉儲費計算規則</div>
+    <ul style="margin-bottom:14px;">
+      <li><strong>月費率：</strong>$0.1 / 個 / 月</li>
+      <li><strong>日費率：</strong>$0.1 ÷ 30 天 = <strong>$0.00333 / 個 / 天</strong></li>
+      <li><strong>計算方式：</strong>每批次按實際在庫天數累計，不足月部分按日折算，滿月部分按月費率計算</li>
+      <li><strong>計費公式：</strong>倉儲費 = 數量 ×（滿月數 × $0.1 + 不足月天數 × $0.00333）</li>
+      <li><strong>停算時點：</strong>結算完成（貨權轉移）或退回供應商出庫確認之日</li>
+    </ul>
+
+    <table>
+      <thead>
+        <tr><th>示例</th><th>數量</th><th>在庫期間</th><th>計算過程</th><th>倉儲費</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>A</td><td>5,000 個</td><td>整 3 個月</td><td>5,000 × 3 × $0.1</td><td><strong>$1,500</strong></td></tr>
+        <tr><td>B</td><td>3,000 個</td><td>45 天（1.5 月）</td><td>3,000 × (1 × $0.1 + 15 × $0.00333)</td><td><strong>$450</strong></td></tr>
+        <tr><td>C</td><td>2,000 個</td><td>80 天（2 月 + 20 天）</td><td>2,000 × (2 × $0.1 + 20 × $0.00333)</td><td><strong>$533</strong></td></tr>
+      </tbody>
+    </table>
+
+    <hr style="border:none;border-top:1px dashed var(--border);margin:24px 0;">
+
+    <!-- 6.4 -->
+    <div class="sub-title">6.4 質量問題退回供應商</div>
+    <p><strong>場景：</strong>入庫時或入庫後發現商品存在質量問題（與 6.1 不同，此處貨物尚在 PuHuo 倉或可退回供應商），需要退回供應商。</p>
+
+    <p><strong>觸發條件：</strong></p>
+    <ul>
+      <li>入庫驗收時發現質量問題（批量不合格）</li>
+      <li>倉儲期間經盤點或抽檢發現質量問題</li>
+      <li>多個客戶反饋同一批次質量異常，決定整批退回</li>
+    </ul>
+
+    <div class="principle">因供應商產品質量問題導致需退回的，貨權始終未轉移，不觸發結算，退回費用由供應商承擔。</div>
+
+    <div class="sub-sub-title">處理流程</div>
+    <div class="flow-box">
+      質量問題發現（入庫驗收 / 倉內盤點 / 客戶批量反饋）<br>
+      <span class="arrow">→</span> 倉庫生成「質量異常報告」，拍照留存<br>
+      <span class="arrow">→</span> 採購人員確認，通知供應商<br>
+      <span class="arrow">→</span> 供應商確認退回<br>
+      <span class="arrow">→</span> 生成「退回供應商出庫單」，關聯原 PO 單<br>
+      <span class="arrow">→</span> 供應商確認收貨 → 庫存核銷，原 PO 單關閉<br>
+      <span class="arrow">→</span> <span class="highlight-text">供應商視情況決定是否補發（可能補，也可能不補）</span><br>
+      <span class="arrow">→</span> 若補發，須按新 PO 單重新提交、審核、入庫
+    </div>
+
+    <p><strong>費用分擔：</strong></p>
+    <table>
+      <thead>
+        <tr><th>項目</th><th>承擔方</th><th>說明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>退回物流費</td><td><span class="status-tag status-red">供應商</span></td><td>因質量問題退回，費用由供應商承擔</td></tr>
+        <tr><td>入庫前檢驗費</td><td><span class="status-tag status-red">供應商</span></td><td>驗收不合格產生的檢驗費用</td></tr>
+        <tr><td>倉儲期間產生的損耗</td><td><span class="status-tag status-red">供應商</span></td><td>倉內存放期間因質量問題導致的損耗</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-sub-title">與 6.1 的區分</div>
+    <table>
+      <thead>
+        <tr><th>對比維度</th><th>6.1 退款不退回</th><th>6.4 退回供應商</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>貨物位置</td><td>在客戶處，無法退回</td><td>在 PuHuo 倉，可退回供應商</td></tr>
+        <tr><td>處理結果</td><td>貨物就地廢棄/銷毀</td><td>貨物退回供應商</td></tr>
+        <tr><td>是否核銷</td><td>ERP 標記「質量核銷」</td><td>ERP 標記「退回供應商」，PO 單關閉</td></tr>
+        <tr><td>是否補發</td><td>否</td><td>不確定，由供應商自行決定；若補發須按新 PO 單重新走完整流程</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Section 7: 庫存狀態管理 -->
+  <div class="section">
+    <div class="section-title"><span class="num">七</span>庫存狀態管理</div>
+    <p>PuHuo 倉的鋪貨庫存需區分以下狀態，確保帳目清晰：</p>
+    <table>
+      <thead>
+        <tr><th>庫存狀態</th><th>說明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="status-tag status-blue">鋪貨在庫（未結算）</span></td><td>已入庫，尚未觸發任何結算條件，貨權歸供應商</td></tr>
+        <tr><td><span class="status-tag status-blue">鋪貨已佔用（銷售中）</span></td><td>已與銷售訂單匹配，等待退貨期結束</td></tr>
+        <tr><td><span class="status-tag status-yellow">待結算</span></td><td>已滿足結算條件，等待財務出帳</td></tr>
+        <tr><td><span class="status-tag status-green">已結算</span></td><td>貨款已付，貨權已轉移，結算完成</td></tr>
+        <tr><td><span class="status-tag status-red">退貨回庫</span></td><td>客戶退回，重新入庫，貨權回歸供應商，結算撤銷或扣回</td></tr>
+        <tr><td><span class="status-tag status-red">質量核銷</span></td><td>質量問題無法退回，已核銷，貨款不予結算</td></tr>
+        <tr><td><span class="status-tag status-red">待扣回</span></td><td>已付款後發生退貨，貨款待從後續應付中扣回</td></tr>
+        <tr><td><span class="status-tag status-yellow">呆滯預警</span></td><td>在庫超過約定期限未結算，系統自動預警，等待處理</td></tr>
+        <tr><td><span class="status-tag status-gray">退回供應商（待出庫）</span></td><td>已確認退回供應商，等待物流發出，貨權仍歸供應商</td></tr>
+        <tr><td><span class="status-tag status-gray">退回供應商（已出庫）</span></td><td>已退回供應商並確認收貨，PO 單關閉，庫存核銷</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Section 8: 系統配置要求 -->
+  <div class="section">
+    <div class="section-title"><span class="num">八</span>系統配置要求（ERP）</div>
+    <table>
+      <thead>
+        <tr><th>功能模塊</th><th>要求</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>PO 單入口</td><td>供應商登入後目標倉位僅顯示 PuHuo 倉，其他倉不可選</td></tr>
+        <tr><td>數據隔離</td><td>每個供應商帳號只能查詢、操作自己名下的 PO 單</td></tr>
+        <tr><td>標籤強制校驗</td><td>未選擇結算標籤則提交報錯攔截</td></tr>
+        <tr><td>審核狀態管控</td><td>鋪貨 PO 依 §3.3 分級審核路由：正常 PO 由採購人員標準審核，高風險 PO（近 30 天無動銷 / 可售天數 > 360 天）由採購人員加強審核並報主管覆核；未通過審核的 PO 單，屏蔽預約送貨入口</td></tr>
+        <tr><td>付款前卡點</td><td>方式①付款前強制核查該批次是否有未關閉退貨申請</td></tr>
+        <tr><td>調拔審批</td><td>方式②調拔操作需設置審批環節，防止誤操作觸發結算</td></tr>
+        <tr><td>結算自動觸發</td><td>方式①：退貨期結束無退貨 → 生成應付；方式②：調拔出庫確認 → 即時生成應付</td></tr>
+        <tr><td>退貨衝銷</td><td>退貨單可反向衝銷已結算應付帳款，並鎖定下次付款扣抵</td></tr>
+        <tr><td>貨權標記</td><td>倉庫系統對鋪貨商品標記所有權歸屬，結算前顯示「供應商所有」</td></tr>
+        <tr><td>呆滯監控</td><td>自動監控鋪貨在庫的動銷狀態：近 30 天無動銷或可售天數 > 360 天時觸發預警，通知採購人員和供應商</td></tr>
+        <tr><td>退回供應商單據</td><td>支持生成「退回供應商出庫單」，關聯原 PO 單，出庫後自動關閉 PO 單</td></tr>
+        <tr><td>呆滯倉儲費核算</td><td>按每批次實際在庫天數自動計算倉儲費（月費率 $0.1/個/月，不足月按 $0.1÷30 天折算），計入供應商應付，定期對帳；加工費按 $0.4 / 個 計收</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Section 9: 各角色職責 -->
+  <div class="section">
+    <div class="section-title"><span class="num">九</span>各角色職責</div>
+    <table>
+      <thead>
+        <tr><th>角色</th><th>職責</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>供應商</strong></td>
+          <td>在 ERP 下 PO 單、選擇正確結算標籤、預約送貨、確保貨品質量；退貨發生後及時退還已收貨款；呆滯/質量問題貨物按約定配合退回並承擔相關費用</td>
+        </tr>
+        <tr>
+          <td><strong>採購人員</strong></td>
+          <td>執行鋪貨 PO 分級審核（§3.3）：正常 PO 標準審核，高風險 PO（近 30 天無動銷 / 可售天數 > 360 天）加強審核並報主管覆核；審核時評估 PO 合規性（標籤、商品品類、數量）、庫存深度合理性、供應商鋪貨規模控制、呆滯風險預判；確認調拔操作；定期評估呆滯庫存並啟動退回流程</td>
+        </tr>
+        <tr>
+          <td><strong>倉庫（PuHuo）</strong></td>
+          <td>按已審核 PO 單收貨入庫，記錄調拔/退貨出入庫，不接受無審核 PO 的到貨；入庫時進行質量驗收，發現異常及時上報；定期盤點鋪貨庫存</td>
+        </tr>
+        <tr>
+          <td><strong>財務</strong></td>
+          <td>監控結算觸發，按付款週期結算；跟蹤退貨衝銷及貨款追回進度</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Section 10: 合同建議條款 -->
+  <div class="section">
+    <div class="section-title"><span class="num">十</span>合同建議條款（核心條款摘要）</div>
+    <ol class="contract-list">
+      <li><strong>結算時間：</strong>方式①於客戶簽收後第 N 天（退貨期結束後）發起付款；方式②於調拔出庫確認後第 N 個工作日發起付款。</li>
+      <li><strong>退貨期：</strong>明確客戶退貨期限，付款時間設計在退貨期結束後，避免先付款再退貨。</li>
+      <li><strong>質量責任：</strong>因供應商產品質量問題導致客戶退款但無法退回貨物的，視為供應商未完成有效交付，公司不予結算該批次貨款，相關損失由供應商承擔。</li>
+      <li><strong>退款追回：</strong>因任何原因導致貨款已付但客戶退貨的，供應商應在 N 個工作日內退還貨款，或授權公司從後續應付帳款中直接扣抵。</li>
+      <li><strong>貨權確認：</strong>鋪貨期間商品貨權歸供應商，未觸發結算條件前公司不承擔庫存損失風險（質量問題除外，由供應商承擔）。</li>
+      <li><strong>呆滯退回：</strong>鋪貨商品入庫超過約定期限（如 N 天）仍未觸發結算的，公司有權要求供應商退回該批次商品。呆滯期間倉儲費按 <strong>$0.1 / 個 / 月</strong> 計收（不足月按日折算，日費率 $0.1 ÷ 30 天），退回物流費由供應商承擔。</li>
+      <li><strong>質量退回：</strong>因供應商產品質量問題需退回供應商的，貨權始終未轉移，不觸發結算，退回物流費及相關損失由供應商承擔。退回後原 PO 單關閉，供應商是否補發由其自行決定；若補發，須按新 PO 單重新提交審核入庫。</li>
+      <li><strong>倉儲費與加工費：</strong>鋪貨期間倉儲費按 <strong>$0.1 / 個 / 月</strong> 計收（不足月按日折算），加工費按 <strong>$0.4 / 個</strong> 計收，費用由供應商承擔，計入供應商應付帳款定期對帳結算。</li>
+    </ol>
+  </div>
+
+  <div class="doc-footer">
+    鋪貨業務合作方案 v1.9 · 2026-05-20 · 供內部匯報使用
+  </div>
+
+</div>
+</body>
+</html>
